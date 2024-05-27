@@ -1861,7 +1861,7 @@ private:
     void parfCatDeSimilare(int index1, int index2) {
         if (index1 >= 0 && index1 < parfumuri.size() && index2 >= 0 && index2 < parfumuri.size())
             cout << parfumuri[index1]->getNumeProdus() << " si " << parfumuri[index2]->getNumeProdus() << " sunt "
-                 << parfumuri[index1]->checkIngr(*parfumuri[index2]) << "% similare";
+                 << parfumuri[index1]->checkIngr(*parfumuri[index2]) << "% similare\n";
         else
             throw out_of_range("Indexul introdus este invalid.");
     }
@@ -1950,42 +1950,35 @@ Singleton* Singleton::instance=NULL;
 
 
 int main() {
+
     Singleton* single = Singleton::getInstance();
 
-    while (true) {
-        cout << "1. Adauga parfum" << endl;
-        cout << "2. Adauga angajat" << endl;
-        cout << "3. Adauga vanzare" << endl;
-        cout << "4. Adauga inventar" << endl;
-        cout << "5. Afiseaza parfumuri" << endl;
-        cout << "6. Afiseaza angajati" << endl;
-        cout << "7. Afiseaza vanzari" << endl;
-        cout << "8. Afiseaza inventare" << endl;
-        cout << "9. Modifica parfum" << endl;
-        cout << "10. Modifica angajat" << endl;
-        cout << "11. Modifica vanzare" << endl;
-        cout << "12. Modifica inventar" << endl;
-        cout << "13. Sterge parfum" << endl;
-        cout << "14. Sterge angajat" << endl;
-        cout << "15. Sterge vanzare" << endl;
-        cout << "16. Sterge inventar" << endl;
-        cout << "17. Operatii specifice parfum" << endl;
-        cout << "18. Operatii specifice vanzare" << endl;
-        cout << "19. Estimare salarii angajati" << endl;
-        cout << "20. Contorizare parfumuri in inventar" << endl;
-        cout << "21. Operatii cu parfumuri" << endl;
-        cout << "0. Exit\n-------------------------\n" << endl ;
-        cout << "Selectati o optiune: \n";
+    bool inMeniu = true;
+    // meniul interactiv pentru functionalitati de baza si functia specifica fiecarei clase
+    try{
+    while (inMeniu)
+    {
+        int comanda;
+        cout << "Bine ati venit! Alegeti optiuni: \n 1: Creare - 2: Read - 3: Update - 4: Delete - 5: Apel functii \n 6: Inapoi la meniu - 7: Quit \n";
+        cin >> comanda;
 
-        int opt;
-        cin >> opt;
-
-        if (opt == 0) {
+        // in functie de comanda putem inchide meniul sau sa ne intoarcem la comenzile de baza
+       
+        switch (comanda)
+        {
+        case 6:
             break;
-        }
+        case 7:
+            inMeniu = false;
+            break;
+        case 1:
+        {   // utilizatorul alege ce doreste sa creeze (obiect)
+            int alegere = 0;
+            cout << "Alegeti optiuni: \n 1: Creare parfum, 2: Creare Angajat, 3: Creare Vanzare, 4: Creare Inventar \n 5: Inapoi la meniu - 6: Quit \n";
+            cin >> alegere;
+            switch (alegere)
+            {
 
-        try {
-            switch (opt) {
             case 1: {
                 Parfum* p = new Parfum;
                 cin >> *p;
@@ -2014,18 +2007,69 @@ int main() {
                 break;
             }
             case 5:
+            {
+                break;
+            }
+            case 6:
+            {
+                inMeniu = false;
+                break;
+            }
+            default:
+                break;
+            }
+            break;
+        }
+        case 2:
+        {
+             // utilizatorul alege ce doreste sa citeasca (obiect)
+            int alegere = 0;
+            cout << "Read optiuni: \n 1: Read Parfumuri, 2: Read Angajati, 3: Read Vanzari, 4: Read Inventare \n 5: Inapoi la meniu - 6: Quit \n";
+            
+            cin >> alegere;
+            switch (alegere)
+            {
+            case 1:
                 single->readParfumuri();
                 break;
-            case 6:
+            case 2:
                 single->readAngajati();
                 break;
-            case 7:
+            case 3:
                 single->readVanzari();
                 break;
-            case 8:
+            case 4:
                 single->readInventare();
                 break;
-            case 9: {
+            case 5:
+            {
+                break;
+            }
+            case 6:
+            {
+                inMeniu = false;
+                break;
+            }
+            default:
+                break;
+            }
+
+            break;
+        }
+        case 3:
+        {    // utilizatorul alege ce doreste sa modifice (obiect)
+            int alegere = 0, index;
+            cout << "Update optiuni: \n 1: Update parfum, 2: Update Angajat, 3: Update Vanzare, 4: Update Inventar \n 5: Inapoi la meniu - 6: Quit \n";
+            cin >> alegere;
+            
+            if (alegere < 5)
+            {
+                cout << "Introduceti index: \n";
+                cin >> index;
+            }
+            switch (alegere)
+            {
+            case 1: {
                 int index;
                 Parfum p;
                 cout << "Introduceti indexul parfumului de modificat: ";
@@ -2036,7 +2080,7 @@ int main() {
                 single->updateParfum(index, p);
                 break;
             }
-            case 10: {
+            case 2: {
                 int index;
                 Angajat a;
                 cout << "Introduceti indexul angajatului de modificat: ";
@@ -2047,33 +2091,47 @@ int main() {
                 single->updateAngajat(index, a);
                 break;
             }
-            case 11: {
+            case 3: {
                 int index, tipVanzare;
                 cout << "Introduceti indexul vanzarii de modificat si tipul vanzarii (1: online, 2: in magazin, 3: online cu ridicare): ";
                 cin >> index >> tipVanzare;
                 if (index < 0 || index >= single->getVanzari().size())
                     throw out_of_range("Indexul introdus este invalid.");
-                Vanzare* v;
-                switch (tipVanzare) {
-                case 1:
-                    v = new VanzareOnline;
-                    cin >> dynamic_cast<VanzareOnline&>(*v);
-                    break;
-                case 2:
-                    v = new VanzareInMagazin;
-                    cin >> dynamic_cast<VanzareInMagazin&>(*v);
-                    break;
-                case 3:
-                    v = new VanzareOnlineCuRidicare;
-                    cin >> dynamic_cast<VanzareOnlineCuRidicare&>(*v);  //DOWNCAST
-                    break;
-                default:
-                    throw invalid_argument("Tipul vanzarii introdus este invalid.");
-                }
+                Vanzare* v = nullptr;
+               try {
+                        switch (tipVanzare) {
+                        case 1:
+                            v = new VanzareOnline;
+                            if (dynamic_cast<VanzareOnline*>(v) == nullptr)
+                                throw bad_cast();
+                            cin >> dynamic_cast<VanzareOnline&>(*v);
+                            break;
+                        case 2:
+                            v = new VanzareInMagazin;
+                            if (dynamic_cast<VanzareInMagazin*>(v) == nullptr)
+                                throw std::bad_cast();
+                            cin >> dynamic_cast<VanzareInMagazin&>(*v);
+                            break;  
+                        case 3:
+                            v = new VanzareOnlineCuRidicare;
+                            if (dynamic_cast<VanzareOnlineCuRidicare*>(v) == nullptr)
+                                throw std::bad_cast();
+                            cin >> dynamic_cast<VanzareOnlineCuRidicare&>(*v);
+                            break;
+                        default:
+                            throw invalid_argument("Tipul vanzarii introdus este invalid.");
+                        }
+                    } catch (const bad_cast& e) {
+                        delete v; 
+                        throw invalid_argument("Tipul vanzarii introdus este invalid.");
+                    } catch (const exception& e) {
+                        delete v; 
+                        throw;
+                    }
                 single->updateVanzare(index, v);
                 break;
             }
-            case 12: {
+            case 4: {
                 int index;
                 InventarMagazin i;
                 cout << "Introduceti indexul inventarului de modificat: ";
@@ -2084,7 +2142,36 @@ int main() {
                 single->updateInventar(index, i);
                 break;
             }
-            case 13: {
+            case 5:
+            {
+                break;
+            }
+            case 6:
+            {
+                inMeniu = false;
+                break;
+            }
+            default:
+                break;
+            }
+
+            break;
+        }
+        case 4:
+        {
+             // utilizatorul alege ce doreste sa stearga (obiect)
+            int alegere = 0, index;
+            cout << "Delete optiuni: \n 1: Delete parfum, 2: Delete Angajat, 3: Delete Vanzare, 4: Delete Inventar \n 5: Inapoi la meniu - 6: Quit \n";
+            cin >> alegere;
+            if (alegere < 5)
+            {
+                cout << "Introduceti index: \n";
+                cin >> index;
+            }
+            switch (alegere)
+            {
+           
+            case 1: {
                 int index;
                 cout << "Introduceti indexul parfumului de sters: ";
                 cin >> index;
@@ -2093,7 +2180,7 @@ int main() {
                 single->deleteParfum(index);
                 break;
             }
-            case 14: {
+            case 2: {
                 int index;
                 cout << "Introduceti indexul angajatului de sters: ";
                 cin >> index;
@@ -2102,7 +2189,7 @@ int main() {
                 single->deleteAngajat(index);
                 break;
             }
-            case 15: {
+            case 3: {
                 int index;
                 cout << "Introduceti indexul vanzarii de sters: ";
                 cin >> index;
@@ -2111,7 +2198,7 @@ int main() {
                 single->deleteVanzare(index);
                 break;
             }
-            case 16: {
+            case 4: {
                 int index;
                 cout << "Introduceti indexul inventarului de sters: ";
                 cin >> index;
@@ -2120,19 +2207,42 @@ int main() {
                 single->deleteInventar(index);
                 break;
             }
-            case 17:
+            
+            case 5:
+            {
+                break;
+            }
+            case 6:
+            {
+                inMeniu = false;
+                break;
+            }
+            default:
+                break;
+            }
+
+            break;
+        }
+        case 5:
+        {   // utilizatorul alege ce functie doreste sa apeleze
+            int alegere = 0;
+            cout << "Functii: \n 1: Cand avem parfumuri in stoc, 2: Estimare salarii, \n 3: Functii pentru vanzari, 4: Cate parfumuri am in fiecare inventar \n 5: Exploram ingredientele parfumurilor: \n6: Inapoi la meniu - 7: Quit \n";
+            cin >> alegere;
+            switch (alegere)
+            {
+            case 1:
                 single->parfumInStoc();
                 break;
-            case 18:
-                single->vanzariFunctii();
-                break;
-            case 19:
+            case 2:
                 single->estimareSalarii();
                 break;
-            case 20:
+            case 3:
+                single->vanzariFunctii();
+                break;
+            case 4:
                 single->countParfumuriInInventare();
                 break;
-            case 21: {
+            case 5: {
                 cout << "Exploram ingredientele parfumurilor: " << endl;
                 cout << "1 - Cat de similare sunt 2 parfumuri? \n2 - Amesteca ingredientele a doua parfumuri\n";
                 int option;
@@ -2154,11 +2264,25 @@ int main() {
                 }
                 break;
             }
-            default:
-                cout << "Optiune invalida!" << endl;
+            case 6:
+            {
                 break;
             }
-        } catch (const out_of_range& e) {
+            case 7:
+            {
+                inMeniu = false;
+                break;
+            }
+            default:
+                break;
+            }
+
+            break;
+        }
+        }
+
+    }
+    }    catch (const out_of_range& e) {
             cerr << "Eroare: " << e.what() << endl;
         } catch (const invalid_argument& e) {
             cerr << "Eroare: " << e.what() << endl;
@@ -2167,5 +2291,5 @@ int main() {
         } catch (...) {
             cerr << "Eroare necunoscuta!" << endl;
         }
-    }
+  return 0;
 }
